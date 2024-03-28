@@ -1,0 +1,202 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Almaz",
+        "version": "1.0.0",
+        "x-logo": {
+            "url": "https://via.placeholder.com/190x90.png?text=L5-Swagger"
+        }
+    },
+    "paths": {
+        "/api/puzzle-codes/verify": {
+            "post": {
+                "tags": [
+                    "POST"
+                ],
+                "summary": "Проверить код",
+                "operationId": "verify",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/puzzle_code_verify"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Элемент создан",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/puzzle_code_verify_created"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Неправильный параметр"
+                    }
+                }
+            }
+        },
+        "/api/puzzle/create": {
+            "post": {
+                "tags": [
+                    "POST"
+                ],
+                "summary": "Создать мозаику + отправить на почту инструкцию",
+                "operationId": "PuzzleCreate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/puzzle_create"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Oк",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/puzzle_create_resp"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Неправильный параметр"
+                    }
+                }
+            }
+        },
+        "/api/puzzle/{slug}": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Получить данные мозаики",
+                "operationId": "PuzzleShow",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug мозаики",
+                        "required": true,
+                        "example": "6866d58d9147e963e53234a367d5eadf"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Oк",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/puzzle_get"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Элемент не найден"
+                    }
+                }
+            }
+        },
+        "/api/puzzle/update": {
+            "post": {
+                "tags": [
+                    "POST"
+                ],
+                "summary": "Обновить мозаику",
+                "operationId": "PuzzleUpdate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/puzzle_update"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Успешно обновлено"
+                    },
+                    "422": {
+                        "description": "Неправильный параметр"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "puzzle_code_verify": {
+                "example": {
+                    "code": "VDR-XZT-IAN"
+                }
+            },
+            "puzzle_code_verify_created": {
+                "example": {
+                    "status": "success",
+                    "response": {
+                        "code": [
+                            "Введен корректный код"
+                        ]
+                    },
+                    "color": "popArt",
+                    "size": "20x30"
+                }
+            },
+            "puzzle_get": {
+                "example": {
+                    "matrix_progress": [
+                        {
+                            "r": 2,
+                            "g": 3,
+                            "b": 3,
+                            "fill": true
+                        }
+                    ],
+                    "image": {
+                        "src": "http://almaz.loc/img/puzzles/oeUSAyr60pLhgc2jFWqZvZ7SwwTh7GYgSRu4AM3k.jpg"
+                    }
+                }
+            },
+            "puzzle_create": {
+                "example": {
+                    "email": "admin@mail.ru",
+                    "code": "VDR-XZT-IAN",
+                    "matrix_progress": "{{r:2, g:3, b:3, fill: true}}",
+                    "preview_picture": "Превью изображение для первой страницы",
+                    "preview_picture_type": "wide/tall - Растянуть изображение по ширине(wide)/высоте(tall)",
+                    "picture_colors": "Картинка с используемыми цветами для pdf"
+                }
+            },
+            "puzzle_update": {
+                "example": {
+                    "matrix_progress": "[{r:2, g:3, b:3, fill: true}] - сектор",
+                    "slug": "6866d58d9147e963e53234a367d5eadf",
+                    "sector_index": 0
+                }
+            },
+            "puzzle_create_resp": {
+                "example": {
+                    "slug": "e7aeca86646e61ed47851c8764ea5625",
+                    "attempts_counter": 5,
+                    "pdf": {
+                        "src": "http://almaz.loc/storage/uploads/files/puzzles/pdf/e7aeca86646e61ed47851c8764ea5625.pdf"
+                    }
+                }
+            }
+        }
+    }
+}
